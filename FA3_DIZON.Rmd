@@ -1,0 +1,51 @@
+---
+title: "FA3_DIZON"
+author: "Dizon, Kiana Marie"
+date: "`r Sys.Date()`"
+output: html_document
+---
+```{r setup, include=FALSE}
+# Loading necessary libraries
+if(!require(e1071)) install.packages("e1071", repos='http://cran.us.r-project.org')
+if(!require(kableExtra)) install.packages("kableExtra", repos='http://cran.us.r-project.org')
+library(e1071)
+library(knitr)
+library(kableExtra)
+```
+
+```{r table}
+
+scores <- c(88, 45, 53, 86, 33, 86, 85, 30, 89, 53, 41, 96, 56, 38, 62,
+            71, 51, 86, 68, 29, 28, 47, 33, 37, 25, 36, 33, 94, 73, 46,
+            42, 34, 79, 72, 88, 99, 82, 62, 57, 42, 28, 55, 67, 62, 60,
+            96, 61, 57, 75, 93, 34, 75, 53, 32, 28, 73, 51, 69, 91, 35)
+
+
+descriptive_stats <- data.frame(
+  Measure = c("Valid", "Mode", "Median", "Mean", "Std. Deviation", 
+              "Variance", "Skewness", "Std. Error of Skewness", 
+              "Kurtosis", "Std. Error of Kurtosis", "Minimum", "Maximum", 
+              "25th percentile", "50th percentile", "75th percentile", 
+              "90th percentile", "95th percentile"),
+  Score = c(length(scores), 
+            as.numeric(names(sort(-table(scores)))[1]), 
+            median(scores), mean(scores), sd(scores), var(scores), 
+            skewness(scores), sqrt(6/length(scores)), 
+            kurtosis(scores) - 3, sqrt(24/length(scores)), 
+            min(scores), max(scores), 
+            quantile(scores, 0.25), quantile(scores, 0.50), 
+            quantile(scores, 0.75), quantile(scores, 0.90), quantile(scores, 0.95))
+)
+
+
+descriptive_stats$Score <- round(descriptive_stats$Score, 3)
+
+
+descriptive_stats %>%
+  kbl(col.names = c("", "Score"), align = "lc", caption = "Descriptive Statistics") %>%
+  kable_styling(full_width = FALSE, position = "center", bootstrap_options = c("striped", "hover")) %>%
+  footnote(general = "a More than one mode exists, only the first is reported", 
+           general_title = " ", footnote_as_chunk = TRUE)
+
+```
+
